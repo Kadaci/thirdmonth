@@ -91,14 +91,13 @@ def main(page: ft.Page):
     filter_buttons = ft.Row(controls=[
         ft.ElevatedButton("Все", on_click=lambda e: set_filter('all')),
         ft.ElevatedButton("Выполненные", on_click=lambda e: set_filter('completed')),
-        ft.ElevatedButton("Невыполненные ", on_click=lambda e: set_filter('uncompleted'))
+        ft.ElevatedButton("Невыполненные", on_click=lambda e: set_filter('uncompleted'))
     ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
-
 
     page.add(ft.Column([
         ft.Row([task_input, add_button]),
         warning_text,
-        filter_buttons,
+        filter_buttons, 
         task_list
     ]))
 
