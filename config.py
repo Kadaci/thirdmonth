@@ -1,0 +1,1 @@
+db_path = "db/list_product.db"
