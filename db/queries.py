@@ -1,18 +1,19 @@
-CREATE_LIST = """
-    CREATE TABLE IF NOT EXISTS products (
+CREATE_TASKS = """
+    CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    product TEXT NOT NULL,
-    bought INTEGER DEFAULT 0
+    task TEXT NOT NULL,
+    completed INTEGER DEFAULT 0,
+    date_t TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
 """
 
-INSERT_LIST = "INSERT INTO products (product) VALUES (?)"
+INSERT_TASK = "INSERT INTO tasks (task, date_t) VALUES (?, ?)"
 
-SELECT_LIST = "SELECT id, product, bought FROM products"
+SELECT_TASK = "SELECT id, task, completed, date_t FROM tasks"
 
-SELECT_BOUGHT = "SELECT id, product, bought FROM products WHERE bought = 1"
-SELECT_NOT_BOUGHT = "SELECT id, product, bought FROM products WHERE bought = 0"
+SELECT_TASK_COMPLETED = "SELECT id, task, completed, date_t FROM tasks WHERE completed = 1"
+SELECT_TASK_UNCOMPLETED = "SELECT id, task, completed, date_t FROM tasks WHERE completed = 0"
 
-UPDATE_LIST = "UPDATE products SET product = ? WHERE id = ?"
+UPDATE_TASK = "UPDATE tasks SET task = ? WHERE id = ?"
 
-DELETE_LIST = "DELETE FROM products WHERE id = ?"
+DELETE_TASK = "DELETE FROM tasks WHERE id = ?"

@@ -1,59 +1,64 @@
 import sqlite3
 from db import queries
 from config import db_path
+import datetime
 
 
 def init_db():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute(queries.CREATE_LIST)
+    cursor.execute(queries.CREATE_TASKS)
+    print('База данных подключена!')
     conn.commit()
     conn.close()
 
 
-def new_product(product):
+def add_task(task):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute(queries.INSERT_LIST, (product,))
+    now = datetime.datetime.now().isoformat(timespec="seconds")
+    cursor.execute(queries.INSERT_TASK, (task, now))
     conn.commit()
-    product_id = cursor.lastrowid
+    task_id = cursor.lastrowid
     conn.close()
-    return product_id
+    return task_id
 
 
-def shopping_list(filter_type='all'):
+def get_task(filter_type='all'):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    if filter_type == 'bought':
-        cursor.execute(queries.SELECT_BOUGHT)
-    elif filter_type == 'not bought':
-        cursor.execute(queries.SELECT_NOT_BOUGHT)
+    if filter_type == 'completed':
+        cursor.execute(queries.SELECT_TASK_COMPLETED)
+    elif filter_type == 'uncompleted':
+        cursor.execute(queries.SELECT_TASK_UNCOMPLETED)
     else:
-        cursor.execute(queries.SELECT_LIST)
+        cursor.execute(queries.SELECT_TASK)
 
-    products = cursor.fetchall()
+    tasks = cursor.fetchall()
     conn.close()
-    return products
+    return tasks 
 
 
-def delete_product(product_id):
+def delete_task(task_id):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute(queries.DELETE_LIST, (product_id,))
+    cursor.execute(queries.DELETE_TASK, (task_id,))
     conn.commit()
     conn.close()
 
 
-def update_product(product_id,new_product=None, bought=None):
+def update_task(task_id, new_task=None, completed=None):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    if new_product is not None:
-        cursor.execute(queries.UPDATE_LIST, (new_product, product_id))
-    
-    if bought is not None:
-        cursor.execute("UPDATE products SET bought = ? WHERE id = ?", (bought, product_id))
+    if new_task is not None and completed is not None:
+        cursor.execute("UPDATE tasks SET task = ?, completed = ? WHERE id = ?", (new_task, completed, task_id))
+    elif new_task is not None:
+        cursor.execute(queries.UPDATE_TASK, (new_task, task_id))
+    elif completed is not None:
+        cursor.execute("UPDATE tasks SET completed = ? WHERE id = ?", (completed, task_id))
 
     conn.commit()
     conn.close()
+
