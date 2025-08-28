@@ -94,11 +94,21 @@ def main(page: ft.Page):
         ft.ElevatedButton("Невыполненные", on_click=lambda e: set_filter('uncompleted'))
     ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
 
+    def delete_completed(_):
+        tasks = main_db.get_task('completed')
+        for task_id, _, _, _ in tasks:
+            main_db.delete_task(task_id)
+        load_task()
+    
+    
+    delete_completed_button = ft.ElevatedButton("Удалить выполненные", on_click=delete_completed)
+
     page.add(ft.Column([
         ft.Row([task_input, add_button]),
         warning_text,
         filter_buttons, 
-        task_list
+        task_list,
+        delete_completed_button
     ]))
 
     load_task()
